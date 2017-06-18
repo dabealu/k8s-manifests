@@ -1,0 +1,35 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-server
+spec:
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      nodeSelector:
+        nfs-server: "true" # kubectl label node <nodename> nfs-server=true
+      containers:
+      - name: nfs-server
+        image: dabealu/nfs-ganesha
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 2049
+        volumeMounts:
+        - name: export
+          mountPath: /export
+        - name: config
+          mountPath: /etc/ganesha/
+      volumes:
+      - name: export
+        hostPath:
+          path: /var/lib/nfs-export
+      - name: config
+        configMap:
+          name: ganesha
+          items:
+          - key: conf
+            path: ganesha.conf          

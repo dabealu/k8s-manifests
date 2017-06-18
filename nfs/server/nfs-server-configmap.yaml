@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ganesha
+data:
+  conf: |
+    EXPORT
+    {
+      Export_Id   = 1;
+      Path        = /export;
+      Pseudo      = /export;
+      Access_Type = RW;
+      Squash      = None;
+      Protocols   = 4;
+      Transports  = TCP;
+
+      CLIENT
+      {
+        Clients  = 192.168.0.0/16;
+      }
+
+      FSAL {
+        Name      = VFS;
+      }
+    }
